@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}SavannahLink - Connecting Farmers to Markets{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4">Welcome to SavannahLink</h1>
+            <p class="lead">Connecting Farmers to Markets</p>
+            <hr class="my-4">
+            <p>SavannahLink is a platform designed to bridge the gap between farmers and markets, providing a seamless way for farmers to showcase their products and connect with buyers locally and globally.</p>
+            <p>Explore our Livestock Management System and Market Access Solution to empower farmers, improve market visibility, and foster agricultural growth in arid and semi-arid regions of Kenya.</p>
+            <a class="btn btn-primary btn-lg" href="{% url 'livestock_list' %}" role="button">Get Started</a>
+        </div>
+    </div>
+{% endblock %}

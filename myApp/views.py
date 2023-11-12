@@ -2,6 +2,9 @@ from django.shortcuts import render
 from .models import Livestock  
 from .forms import ContactSellerForm 
 
+def landing_page(request):
+    return render(request, 'landing_page.html')
+
 def livestock_list(request):
     livestock_list = Livestock.objects.all() 
     return render(request, 'livestock/livestock_list.html', {'livestock_list': livestock_list})
