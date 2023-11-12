@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,9 +10,21 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">SavannaLink</a>
-  <!-- Add your navigation links or components here -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{% url 'landing_page' %}">SavannaLink</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+              <a class="nav-link" href="{% url 'livestock_list' %}">Livestock Management System</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="{% url 'market_home' %}">Marketplace</a>
+          </li>
+      </ul>
+  </div>
 </nav>
 
 <div class="container mt-4">
@@ -21,6 +32,6 @@
 </div>
 
 <!-- Add your JavaScript and other scripts here -->
-<script src="{% static '/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
 </body>
 </html>
