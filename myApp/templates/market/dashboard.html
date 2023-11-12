@@ -1,0 +1,18 @@
+<!-- dashboard.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - SavannahLink{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="text-center">Dashboard</h1>
+        <p class="text-center">Welcome, {{ username }}!</p>
+        
+        <!-- Add other dashboard content as needed -->
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+        </div>
+    </div>
+{% endblock %}

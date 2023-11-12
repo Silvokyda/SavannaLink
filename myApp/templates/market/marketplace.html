@@ -1,0 +1,49 @@
+<!-- marketplace.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Marketplace - SavannahLink{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="my-4">Marketplace</h1>
+        <div class="jumbotron">
+            <h1 class="display-4">Welcome to the Marketplace!</h1>
+            <p class="lead">Connect directly with buyers and showcase your livestock products.</p>
+            <hr class="my-4">
+            <p>Explore opportunities, manage your listings, and grow your market reach.</p>
+            <a class="btn btn-primary btn-lg" href="{% url 'signup' %}" role="button">Get Started</a>
+        </div>
+        
+        <!-- Information for Farmers -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">For Farmers</h5>
+                <p class="card-text">To start selling your livestock products and accessing the full features of the marketplace, you need to have a SavannahLink account.</p>
+                <p class="card-text">If you already have an account, <a href="{% url 'login' %}">log in here</a>.</p>
+                <p class="card-text">If you don't have an account yet, <a href="{% url 'signup' %}">sign up now</a> to get started.</p>
+            </div>
+        </div>
+        
+        <!-- Product Listings -->
+        {% for product in products %}
+            <div class="card mb-3">
+                <div class="row no-gutters">
+                    <div class="col-md-4">
+                        <!-- You can add an image of the product here -->
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">{{ product.description }}</p>
+                            <p class="card-text"><strong>Category:</strong> {{ product.category }}</p>
+                            <p class="card-text"><strong>Price:</strong> ${{ product.price }}</p>
+                            <!-- Add more details as needed -->
+                            <a href="#" class="btn btn-primary">Add to Cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

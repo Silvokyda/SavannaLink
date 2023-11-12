@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up - SavannahLink{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-center">Sign Up</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" novalidate class="rounded p-4">
+                            {% csrf_token %}
+                              
+                            {% for field in form %}
+                            <div class="form-group">
+                                {% if field.errors %}
+                                <ul class="errorlist">
+                                    {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                                {{ field.label_tag }}
+                                {{ field }}
+                            </div>
+                            {% endfor %}
+                            <div class="text-center">
+                                <input type="submit" value="Register" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
