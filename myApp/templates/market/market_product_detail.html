@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Product Details - Your Project{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="my-4">Product Details</h1>
+        
+        <!-- Replace 'product' with the variable holding your product details -->
+        <div class="row">
+            <div class="col-md-6">
+                <img src="https://images.pexels.com/photos/422202/pexels-photo-422202.jpeg?auto=compress&cs=tinysrgb&w=400" class="img-fluid" alt="Product Image">
+            </div>
+            <div class="col-md-6">
+                <h2>{% if product %}{{ product.name }}{% else %}Product Name{% endif %}</h2>
+                <p class="lead">{% if product %}{{ product.description }}{% else %}Product description goes here.{% endif %}</p>
+                <p>Price: {% if product %}${{ product.price }}{% else %}$0.00{% endif %}</p>
+                <p>Available Quantity: {% if product %}{{ product.quantity }}{% else %}0{% endif %}</p>
+                <!-- Add more product details as needed -->
+                <a href="#" class="btn btn-primary">Contact Seller</a>
+            </div>
+        </div>
+        
+        <!-- Additional product details or description -->
+        <div class="mt-4">
+            <h3>Description</h3>
+            <p>{% if product %}{{ product.detailed_description }}{% else %}Lorem ipsum dolor sit amet, consectetur adipiscing elit.{% endif %}</p>
+        </div>
+    </div>
+{% endblock %}
