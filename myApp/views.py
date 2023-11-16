@@ -49,11 +49,6 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'authentication/login.html', {'form': form})
 
-@login_required
-def dashboard(request):
-    user_products = Product.objects.filter(owner=request.user)
-    return render(request, 'market/dashboard.html', {'user_products': user_products})
-
 def logout_view(request):
     logout(request)
     return redirect('landing_page')
@@ -78,5 +73,5 @@ def delete_product(request, product_id):
 
 @login_required
 def dashboard(request):
-    user_products = Product.objects.filter(user=request.user)
+    user_products = Product.objects.filter(owner=request.user)
     return render(request, 'market/dashboard.html', {'user_products': user_products})
