@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Livestock, Product
+from .models import Livestock, Product, Cart
 
 @admin.register(Livestock)
 class LivestockAdmin(admin.ModelAdmin):
@@ -10,3 +10,5 @@ class LivestockAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'price')
     search_fields = ('name', 'category')
+
+admin.site.register(Cart)

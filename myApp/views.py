@@ -1,9 +1,12 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
-from .models import Product, Livestock
+from .models import Product, Livestock, Cart
 from .forms import ProductForm, SignUpForm, ContactSellerForm
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
+from django.http import JsonResponse
+
 
 def landing_page(request):
     return render(request, 'landing_page.html')
@@ -74,4 +77,27 @@ def delete_product(request, product_id):
 @login_required
 def dashboard(request):
     user_products = Product.objects.filter(owner=request.user)
-    return render(request, 'market/dashboard.html', {'user_products': user_products})
+
+    # Fetch cart items for the current user
+    cart_items = Cart.objects.filter(user=request.user)
+
+    # Calculate total amount in the cart
+    cart_total = cart_items.aggregate(Sum('product__price'))['product__price__sum'] or 0
+
+    return render(request, 'market/dashboard.html', {'user_products': user_products, 'cart_items': cart_items, 'cart_total': cart_total})
+
+def update_cart(request):
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        quantity = int(request.POST.get('quantity'))
+
+        # Update the cart in the database
+        # Assuming you have a Cart model with a product field
+        product = Product.objects.get(id=product_id)
+        cart_item, created = Cart.objects.get_or_create(user=request.user, product=product)
+        cart_item.quantity = quantity
+        cart_item.save()
+
+        return JsonResponse({'status': 'success'})
+
+    return JsonResponse({'status': 'error'})
