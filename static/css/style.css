@@ -57,3 +57,31 @@ input[type="checkbox"] {
 .user-products-list {
     width: 48%; /* Adjust as needed */
 }
+
+/* Modal Header */
+#forFarmersModal .modal-header {
+    background-color: #3498db;
+    color: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Modal Title */
+#forFarmersModal .modal-title {
+    font-weight: bold;
+}
+
+/* Modal Body */
+#forFarmersModal .modal-body {
+    font-size: 16px;
+}
+
+/* Close Button */
+#forFarmersModal .btn-close {
+    color: #fff;
+}
+
+/* Background Overlay */
+#forFarmersModal.modal.fade.show {
+    background-color: rgba(52, 152, 219, 0.7); /* Adjust the opacity as needed */
+}
+

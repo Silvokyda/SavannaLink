@@ -5,10 +5,13 @@
 {% load static %}
 
 {% block title %}Dashboard - SavannahLink{% endblock %}
+
+{% block content %}
 <head>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
-{% block content %}
+<body>
+    
     <div class="container mt-5">
         <h1 class="text-center">Dashboard</h1>
         <p class="text-center">Welcome, {{ username }}!</p>
@@ -17,100 +20,13 @@
         
         {% include '_banner_ad.html' %}
 
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="bootstrap-tabs product-tabs">        
-                        <div class="tab-content" id="nav-tabContent">
-                            <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
-                                <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
-                                    {% for product in products %}
-                                    <div class="col">
-                                        <div class="card mb-3">
-                                            <div class="row no-gutters">
-                                                <div class="col-md-4">
-                                                    <!-- You can add an image of the product here -->
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">{{ product.name }}</h5>
-                                                        <p class="card-text">{{ product.description }}</p>
-                                                        <p class="card-text"><strong>Category:</strong> {{ product.category }}</p>
-                                                        <p class="card-text"><strong>Price:</strong> ${{ product.price }}</p>
-                                                        <button class="btn btn-primary" onclick="addToCart('{{ product.id }}')">Add to Cart</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
+        {% include 'market/product_card.html' %}
+     
         <div class="text-center mt-4">
             <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
         </div>
     </div>
 
-    <script>
-        $(document).ready(function () {
-            function updateQuantity(productId, newQuantity) {
-                $.ajax({
-                    type: 'POST',
-                    url: '{% url "update_cart" %}',  
-                    data: {
-                        'product_id': productId,
-                        'quantity': newQuantity,
-                        'csrfmiddlewaretoken': '{{ csrf_token }}'  
-                    },
-                    success: function (data) {
-                        $('#quantity-' + productId).text(newQuantity);
-                    },
-                    error: function () {
-                        alert('Error updating quantity. Please try again.');
-                    }
-                });
-            }
     
-            // Function to handle adding to the cart
-            function addToCart(productId) {
-                console.log('Adding to cart:', productId);
-                $.ajax({
-                    type: 'POST',
-                    url: '{% url "add_to_cart" %}',  
-                    data: {
-                        'product_id': productId,
-                        'csrfmiddlewaretoken': '{{ csrf_token }}'  
-                    },
-                    success: function (data) {
-                        var currentQuantity = parseInt($('#quantity-' + productId).text());
-                        var newQuantity = currentQuantity + 1;
-                        updateQuantity(productId, newQuantity);
-                    },
-                    error: function () {
-                        alert('Error adding to cart. Please try again.');
-                    }
-                });
-            }
-    
-            $('.quantity-increase').click(function () {
-                var productId = $(this).data('product-id');
-                var currentQuantity = parseInt($('#quantity-' + productId).text());
-                var newQuantity = currentQuantity + 1;
-                updateQuantity(productId, newQuantity);
-            });
-    
-            $('.quantity-decrease').click(function () {
-                var productId = $(this).data('product-id');
-                var currentQuantity = parseInt($('#quantity-' + productId).text());
-                var newQuantity = Math.max(currentQuantity - 1, 0);  
-                updateQuantity(productId, newQuantity);
-            });
-        });
-    </script>    
+</body>  
 {% endblock %}
