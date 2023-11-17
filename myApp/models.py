@@ -33,3 +33,16 @@ class Cart(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Cart - {self.product.name}"
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    location = models.CharField(max_length=255, blank=True, null=True)
+    company_name = models.CharField(max_length=255, blank=True, null=True)
+    position = models.CharField(max_length=255, blank=True, null=True)
+    work_number = models.CharField(max_length=15, blank=True, null=True)
+    mobile_number = models.CharField(max_length=15, blank=True, null=True)
+    email_address = models.EmailField(blank=True, null=True)
+    work_address = models.TextField(blank=True, null=True)
+    current_password = models.CharField(max_length=255, blank=True, null=True)
+    new_password = models.CharField(max_length=255, blank=True, null=True)
+    make_account_public = models.BooleanField(default=False)

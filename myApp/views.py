@@ -1,8 +1,8 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
-from django.shortcuts import render, redirect
-from .models import Product, Livestock, Cart
-from .forms import ProductForm, SignUpForm, ContactSellerForm
+from django.shortcuts import get_object_or_404, render, redirect
+from .models import Product, Livestock, Cart, UserProfile
+from .forms import ProductForm, SignUpForm, ContactSellerForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.http import JsonResponse
@@ -90,9 +90,6 @@ def update_cart(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
         quantity = int(request.POST.get('quantity'))
-
-        # Update the cart in the database
-        # Assuming you have a Cart model with a product field
         product = Product.objects.get(id=product_id)
         cart_item, created = Cart.objects.get_or_create(user=request.user, product=product)
         cart_item.quantity = quantity
@@ -101,3 +98,49 @@ def update_cart(request):
         return JsonResponse({'status': 'success'})
 
     return JsonResponse({'status': 'error'})
+
+@login_required
+def edit_profile(request):
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+
+    form = UserProfileForm(request.POST or None, instance=user_profile)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('edit_profile')  
+
+    return render(request, 'market/edit_profile.html', {'form': form})
+
+def edit_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    if request.method == 'POST':
+        new_price = request.POST.get('new_price')
+        product.price = new_price
+        product.save()
+
+    return redirect('edit_profile')
+
+def delete_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    if request.method == 'POST':
+        product.delete()
+
+    return redirect('edit_profile')
+
+def add_product(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            new_product = form.save(commit=False)
+            new_product.owner = request.user
+            new_product.save()
+            return redirect('edit_profile')
+    else:
+        form = ProductForm()
+
+    return render(request, 'market/add_product.html', {'form': form})
+
+

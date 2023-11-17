@@ -1,0 +1,52 @@
+<!-- edit_profile.html -->
+
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Edit Profile - SavannahLink{% endblock %}
+
+{% block content %}
+    {% include 'market/menu_bar.html' %}
+
+    <div class="edit-profile-container">
+        <!-- User Info Form -->
+        <div class="user-info-form">
+            <h1>Edit Profile</h1>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+
+        <!-- User's Products List -->
+        <div class="user-products-list">
+            <h2>Your Products</h2>
+            {% if user_products %}
+                <ul>
+                    {% for product in user_products %}
+                        <li>
+                            <strong>{{ product.name }}</strong>
+                            <p>Description: {{ product.description }}</p>
+                            <p>Price: ${{ product.price }}</p>
+                            <form method="post" action="{% url 'edit_product' product.id %}">
+                                {% csrf_token %}
+                                <label for="new_price">New Price:</label>
+                                <input type="number" name="new_price" value="{{ product.price }}">
+                                <button type="submit">Update Price</button>
+                            </form>
+                            <form method="post" action="{% url 'delete_product' product.id %}">
+                                {% csrf_token %}
+                                <button type="submit">Delete Product</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>You haven't uploaded any products yet. </p>
+                <a href="{% url 'add_product' %}" class="btn btn-danger">Add a product</a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

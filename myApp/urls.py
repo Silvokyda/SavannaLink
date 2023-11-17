@@ -12,4 +12,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('update_cart/', views.update_cart, name='update_cart'),
+    path('edit_profile/', views.edit_profile, name='edit_profile'),
+    path('delete-product/<int:product_id>/', views.delete_product, name='delete_product'),
+    path('add-product/', views.add_product, name='add_product'),
 ]
