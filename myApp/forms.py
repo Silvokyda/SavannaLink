@@ -26,9 +26,11 @@ class SignUpForm(UserCreationForm):
         fields = ('username', 'phone_number', 'password1', 'password2')
 
 class ProductForm(forms.ModelForm):
+    quantity = forms.IntegerField(label='Quantity', initial=1, min_value=1)
+
     class Meta:
         model = Product
-        fields = ['name', 'category', 'description', 'price', 'image']
+        fields = ['name', 'category', 'description', 'price', 'quantity', 'image']
 
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
@@ -36,4 +38,5 @@ class ProductForm(forms.ModelForm):
         self.fields['category'].widget.attrs.update({'class': 'form-control'})
         self.fields['description'].widget.attrs.update({'class': 'form-control'})
         self.fields['price'].widget.attrs.update({'class': 'form-control'})
+        self.fields['quantity'].widget.attrs.update({'class': 'form-control'})
         self.fields['image'].widget.attrs.update({'class': 'form-control'})
