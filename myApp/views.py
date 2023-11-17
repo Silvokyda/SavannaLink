@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseBadRequest
 
 def landing_page(request):
     return render(request, 'landing_page.html')
@@ -58,18 +59,6 @@ def logout_view(request):
     return redirect('landing_page')
 
 @login_required
-def add_product(request):
-    if request.method == 'POST':
-        form = ProductForm(request.POST)
-        if form.is_valid():
-            product = form.save(commit=False)
-            product.save()
-            return redirect('dashboard')
-    else:
-        form = ProductForm()
-    return render(request, 'market/add_product.html', {'form': form})
-
-@login_required
 def delete_product(request, product_id):
     product = Product.objects.get(pk=product_id)
     product.delete()
@@ -100,10 +89,17 @@ def update_cart(request):
 
     return JsonResponse({'status': 'error'})
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .models import UserProfile, Product
-from .forms import UserProfileForm, ProductForm
+@csrf_exempt
+def add_to_cart(request):
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        product = Product.objects.get(id=product_id)
+        cart_item, created = Cart.objects.get_or_create(user=request.user, product=product)
+        cart_item.quantity += 1
+        cart_item.save()
+        return JsonResponse({'status': 'success'})
+
+    return HttpResponseBadRequest('Invalid request method')
 
 @login_required
 def edit_profile(request):
@@ -136,7 +132,6 @@ def edit_profile(request):
         'user_products': Product.objects.filter(owner=request.user),
     })
 
-
 def edit_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
@@ -144,14 +139,6 @@ def edit_product(request, product_id):
         new_price = request.POST.get('new_price')
         product.price = new_price
         product.save()
-
-    return redirect('edit_profile')
-
-def delete_product(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-
-    if request.method == 'POST':
-        product.delete()
 
     return redirect('edit_profile')
 
@@ -171,5 +158,16 @@ def add_product(request):
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
+# @login_required
+# def add_product(request):
+#     if request.method == 'POST':
+#         form = ProductForm(request.POST)
+#         if form.is_valid():
+#             product = form.save(commit=False)
+#             product.save()
+#             return redirect('dashboard')
+#     else:
+#         form = ProductForm()
+#     return render(request, 'market/add_product.html', {'form': form})
 
 
