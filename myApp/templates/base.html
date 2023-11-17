@@ -7,6 +7,7 @@
     <title>{% block title %}SavannaLink{% endblock %}</title>
     <!-- Add your CSS and other head elements here -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <!-- favicon -->
     <link rel="icon" href="{% static 'images/logo.jpg' %}" type="image/x-icon">
@@ -53,30 +54,30 @@
     </style>
 </head>
 <body>
-
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="col-sm-4 col-lg-3 text-center text-sm-start">
-        <div class="main-logo">
-            <a href="{% url 'landing_page' %}" class="navbar-brand">
-                <img src="{% static 'images/logo.jpg' %}" alt="logo" class="img-fluid" width="50" height="30"> SavannaLink
-            </a>
+ <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="col-sm-4 col-lg-3 text-center text-sm-start">
+            <div class="main-logo">
+                <a href="{% url 'landing_page' %}" class="navbar-brand">
+                    <img src="{% static 'images/logo.jpg' %}" alt="logo" class="img-fluid" width="50" height="30"> SavannaLink
+                </a>
+            </div>
         </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'livestock_list' %}">Livestock Management System</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'marketplace' %}">Marketplace</a>
+            </li>
+        </ul>
     </div>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-              <a class="nav-link" href="{% url 'livestock_list' %}">Livestock Management System</a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" href="{% url 'marketplace' %}">Marketplace</a>
-          </li>
-      </ul>
-  </div>
-</nav>
-
+    </nav>
+</header>
 <!-- <div class="container mt-4"> -->
     {% block content %}{% endblock %}
 <!-- </div> -->
@@ -135,6 +136,7 @@
             updateQuantity(productId, newQuantity);
         });
     });
+
 </script> 
 
 
@@ -142,5 +144,6 @@
 <!-- Add your JavaScript and other scripts here -->
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/script.js' %}"></script>
+<script src="{% static 'js/global.js' %}"></script>
 </body>
 </html>
