@@ -6,7 +6,7 @@ from .forms import ProductForm, SignUpForm, ContactSellerForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.http import JsonResponse
-
+from django.views.decorators.csrf import csrf_exempt
 
 def landing_page(request):
     return render(request, 'landing_page.html')
@@ -29,6 +29,7 @@ def market_product_detail(request, product_id):
 def marketplace(request):
     products = Product.objects.all()
     return render(request, 'market/marketplace.html', {'products': products})
+
 
 def signup(request):
     if request.method == 'POST':
@@ -76,20 +77,20 @@ def delete_product(request, product_id):
 
 @login_required
 def dashboard(request):
-    user_products = Product.objects.filter(owner=request.user)
+    products = Product.objects.all()
 
     # Fetch cart items for the current user
     cart_items = Cart.objects.filter(user=request.user)
 
     # Calculate total amount in the cart
     cart_total = cart_items.aggregate(Sum('product__price'))['product__price__sum'] or 0
-
-    return render(request, 'market/dashboard.html', {'user_products': user_products, 'cart_items': cart_items, 'cart_total': cart_total})
+    
+    return render(request, 'market/dashboard.html', {'products': products, 'cart_items': cart_items, 'cart_total': cart_total})
 
 def update_cart(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
-        quantity = int(request.POST.get('quantity'))
+        quantity = int(request.POST.get('quantity')) 
         product = Product.objects.get(id=product_id)
         cart_item, created = Cart.objects.get_or_create(user=request.user, product=product)
         cart_item.quantity = quantity
@@ -99,18 +100,42 @@ def update_cart(request):
 
     return JsonResponse({'status': 'error'})
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import UserProfile, Product
+from .forms import UserProfileForm, ProductForm
+
 @login_required
 def edit_profile(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
 
-    form = UserProfileForm(request.POST or None, instance=user_profile)
+    # User Profile Form
+    user_profile_form = UserProfileForm(request.POST or None, instance=user_profile)
 
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            return redirect('edit_profile')  
+    # Product Form
+    product_form = ProductForm(request.POST or None)
 
-    return render(request, 'market/edit_profile.html', {'form': form})
+    # Handle User Profile Form Submission
+    if request.method == 'POST' and 'user-profile-form' in request.POST:
+        if user_profile_form.is_valid():
+            user_profile_form.save()
+            return redirect('edit_profile')
+
+    # Handle Product Form Submission
+    if request.method == 'POST' and 'product-form' in request.POST:
+        if product_form.is_valid():
+            # Save the product, assuming you have a user field in your Product model
+            product = product_form.save(commit=False)
+            product.owner = request.user
+            product.save()
+            return redirect('edit_profile')
+
+    return render(request, 'market/edit_profile.html', {
+        'user_profile_form': user_profile_form,
+        'product_form': product_form,
+        'user_products': Product.objects.filter(owner=request.user),
+    })
+
 
 def edit_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -130,17 +155,21 @@ def delete_product(request, product_id):
 
     return redirect('edit_profile')
 
+@csrf_exempt  
 def add_product(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST)
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
-            new_product = form.save(commit=False)
-            new_product.owner = request.user
-            new_product.save()
-            return redirect('edit_profile')
+            product = form.save(commit=False)
+            product.owner = request.user
+            product.save()
+            return JsonResponse({'status': 'success', 'message': 'Product added successfully'})
+        else:
+            return JsonResponse({'status': 'error', 'errors': form.errors})
     else:
         form = ProductForm()
 
-    return render(request, 'market/add_product.html', {'form': form})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
 
 
