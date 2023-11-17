@@ -1,0 +1,95 @@
+<div class="user-products-list">
+    <h2>Your Products</h2>
+    <button id="showAddProductForm" class="btn btn-danger">Add a product</button>
+
+    {% if user_products %}
+        <ul>
+            {% for product in user_products %}
+                <li>
+                    <strong>{{ product.name }}</strong>
+                    <p>Description: {{ product.description }}</p>
+                    <p>Price: ${{ product.price }}</p>
+                    <form method="post" action="{% url 'edit_product' product.id %}">
+                        {% csrf_token %}
+                        <label for="new_price">New Price:</label>
+                        <input type="number" name="new_price" value="{{ product.price }}">
+                        <button type="submit">Update Price</button>
+                    </form>
+                    <form method="post" action="{% url 'delete_product' product.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Delete Product</button>
+                    </form>
+                    <br>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You haven't uploaded any products yet. </p>
+        <ul>
+            <li>
+                <form method="post" id="addProductForm" style="display: none;" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ product_form.as_p }}
+                    <button type="button" class="btn btn-primary" id="submitProductForm">Add</button>
+                    <button type="button" class="btn btn-secondary" id="closeAddProductForm">Close</button>
+                </form>
+            </li>
+        </ul>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const showAddProductFormButton = document.getElementById('showAddProductForm');
+        const addProductForm = document.getElementById('addProductForm');
+        const submitProductFormButton = document.getElementById('submitProductForm');
+        const closeAddProductFormButton = document.getElementById('closeAddProductForm');
+
+        // Show the add product form when the button is clicked
+        showAddProductFormButton.addEventListener('click', function () {
+            console.log('Add product form button clicked!');
+            addProductForm.style.display = 'block';
+        });
+
+        // Handle form submission
+        submitProductFormButton.addEventListener('click', function () {
+            console.log('Submit product form button clicked!');
+            event.preventDefault();
+
+            // Get form data
+            const formData = new FormData(addProductForm);
+
+            // Send a POST request to add a new product
+            fetch("{% url 'add_product' %}", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                addProductForm.reset();
+                addProductForm.style.display = 'none';
+
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        // Close the add product form
+        closeAddProductFormButton.addEventListener('click', function () {
+            addProductForm.reset();
+            addProductForm.style.display = 'none';
+        });
+    });
+</script>

@@ -18,82 +18,9 @@
             </form>
         </div>
 
-        <!-- User's Products List -->
-        <div class="user-products-list">
-            <h2>Your Products</h2>
-            {% if user_products %}
-                <ul>
-                    {% for product in user_products %}
-                        <li>
-                            <strong>{{ product.name }}</strong>
-                            <p>Description: {{ product.description }}</p>
-                            <p>Price: ${{ product.price }}</p>
-                            <form method="post" action="{% url 'edit_product' product.id %}">
-                                {% csrf_token %}
-                                <label for="new_price">New Price:</label>
-                                <input type="number" name="new_price" value="{{ product.price }}">
-                                <button type="submit">Update Price</button>
-                            </form>
-                            <form method="post" action="{% url 'delete_product' product.id %}">
-                                {% csrf_token %}
-                                <button type="submit">Delete Product</button>
-                            </form>
-                            <br>
-                            <button id="showAddProductForm" class="btn btn-danger">Add a product</button>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>You haven't uploaded any products yet. </p>
-                <button id="showAddProductForm" class="btn btn-danger">Add a product</button>
-                <div id="addProductForm" style="display: none;">
-                    <br>
-                    <form method="post" id="product-form" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ product_form.as_p }}
-                        <button type="submit" class="btn btn-primary" id="submitProductForm">Add Product</button>
-                        <button type="button" class="btn btn-secondary" id="closeAddProductForm">Close</button>
-                    </form>
-                </div>
-            {% endif %}
-        </div>
+        {% include 'market/User_Products_List.html' %}
+
     </div>
 
-    <script>
-        // JavaScript to toggle the visibility of the add product form
-        document.getElementById('showAddProductForm').addEventListener('click', function() {
-            document.getElementById('addProductForm').style.display = 'block';
-        });
-
-        // JavaScript to handle form submission via AJAX
-        document.getElementById('submitProductForm').addEventListener('click', function(event) {
-            event.preventDefault();
-
-            // Collect form data
-            var formData = new FormData(document.getElementById('product-form'));
-
-            // Submit form data using AJAX
-            fetch("{% url 'add_product' %}", {
-                method: "POST",
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',  // Add this header to identify AJAX request
-                    'Accept': 'application/json',
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Handle the response (if needed)
-                console.log(data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        });
-
-        // JavaScript to close the add product form
-        document.getElementById('closeAddProductForm').addEventListener('click', function() {
-            document.getElementById('addProductForm').style.display = 'none';
-        });
-    </script>
+   
 {% endblock %}
