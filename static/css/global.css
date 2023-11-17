@@ -30,3 +30,72 @@ header.fixed {
     right: 28px;
     top: 30%;
 }
+
+.card-box {
+    padding: 5%;
+    overflow: hidden;
+}
+.card img {
+    width: 100% !important;
+    height: 100px !important;
+    object-fit: cover;
+}
+.card-btn {
+    background-color: transparent !important;
+    color: #17a2b8 !important;
+    font-size: smaller !important;
+    font-weight: bolder;
+    border: 2px solid #17a2b8 !important;
+    width: 100% !important;
+}
+
+.card-btn:hover{
+    background-color: #17a2b8 !important;
+    color: white !important;
+}
+
+.card-text {
+    font-size: X-small !important;
+    text-align: start;
+    width: 100%;
+    min-height: 5vh;
+     display: -webkit-box;
+    -webkit-line-clamp: 3; /* Limit the text to three lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+.card-text::first-letter {
+    text-transform: uppercase; /* Capitalize the first letter of the first word */
+}
+
+.card {
+    font-family: 'Poppins', sans-serif !important; 
+    display: flex !important;
+    align-items: start !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    padding: 5%;
+}
+
+.card-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: bold !important;
+    font-size: smaller !important;
+    width: 100%;
+    padding: 10px 0;
+    text-transform: uppercase !important;
+    font-size: 1em !important;
+}
+
+.info-title {
+    font-size: small !important;
+}
+
+.info-price {
+    color: gray;
+    font-size: small !important;
+}
