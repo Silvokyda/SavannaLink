@@ -4,13 +4,15 @@
                 <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
                     <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
                         {% for product in products %}
-                        <div class="col">
-                            <div class="card">
+                        <div class="col card-box">
+                            <div class="card border-0">
                                 <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:100%">
-                                <h5 class="card-title">{{ product.name }}</h5>
-                                <p class="price">${{ product.price }}</p>
+                                <div class="card-info m-0">
+                                    <h5 class="info-title m-0">{{ product.name }}</h5>
+                                    <p class="info-price m-0">${{ product.price }}</p>
+                                </div>
                                 <p class="card-text">{{ product.description }}</p>
-                                <button class="btn btn-primary" onclick="addToCart('{{ product.id }}')">Add to Cart</button>
+                                <button class="card-btn" onclick="addToCart('{{ product.id }}')">Add to Cart</button>
                             </div>
                         </div>
                         {% endfor %}
