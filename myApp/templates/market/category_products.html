@@ -1,0 +1,45 @@
+<!-- category_products.html -->
+
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Dashboard - SavannahLink{% endblock %}
+
+{% block content %}
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+    
+    <div class="container mt-5">
+        <h1 class="text-center">Dashboard</h1>
+        <p class="text-center">Welcome, {{ request.user.username }}!</p>
+
+        {% include 'market/menu_bar.html' %}
+        
+        {% include '_banner_ad.html' %}
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+          {% for product in products %}
+            <div class="col card-box">
+              <div class="card border-0">
+                  <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:100%">
+                  <div class="card-info m-0">
+                      <h5 class="info-title m-0">{{ product.name }}</h5>
+                      <p class="info-price m-0">${{ product.price }}</p>
+                  </div>
+                  <p class="card-text">{{ product.description }}</p>
+                  <button class="card-btn" onclick="addToCart('{{ product.id }}')">Add to Cart</button>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+     
+        <div class="text-center m-4">
+            <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+        </div>
+    </div>
+
+</body>  
+{% endblock %}

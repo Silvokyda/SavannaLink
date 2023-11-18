@@ -26,7 +26,14 @@ class SignUpForm(UserCreationForm):
         fields = ('username', 'phone_number', 'password1', 'password2')
 
 class ProductForm(forms.ModelForm):
+    CATEGORY_CHOICES = [
+        ('crops', 'Crops'),
+        ('livestock', 'Livestock'),
+        ('tools', 'Tools'),
+    ]
+
     quantity = forms.IntegerField(label='Quantity', initial=1, min_value=1)
+    category = forms.ChoiceField(choices=CATEGORY_CHOICES, label='Category')
 
     class Meta:
         model = Product
@@ -40,3 +47,4 @@ class ProductForm(forms.ModelForm):
         self.fields['price'].widget.attrs.update({'class': 'form-control'})
         self.fields['quantity'].widget.attrs.update({'class': 'form-control'})
         self.fields['image'].widget.attrs.update({'class': 'form-control'})
+

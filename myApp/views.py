@@ -157,16 +157,21 @@ def add_product(request):
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
-# @login_required
-# def add_product(request):
-#     if request.method == 'POST':
-#         form = ProductForm(request.POST)
-#         if form.is_valid():
-#             product = form.save(commit=False)
-#             product.save()
-#             return redirect('dashboard')
-#     else:
-#         form = ProductForm()
-#     return render(request, 'market/add_product.html', {'form': form})
+@login_required
+def crops_view(request):
+    template_name = 'market/category_products.html'
+    crops = Product.objects.filter(category='crops')
+    return render(request, template_name, {'products': crops})
 
+@login_required
+def livestock_view(request):
+    template_name = 'market/category_products.html'
+    livestock = Product.objects.filter(category='livestock')
+    return render(request, template_name, {'products': livestock})
+
+@login_required
+def equipment_view(request):
+    template_name = 'market/category_products.html'
+    equipment = Product.objects.filter(category='tools')
+    return render(request, template_name, {'products': equipment})
 
