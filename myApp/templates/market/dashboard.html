@@ -14,7 +14,7 @@
     
     <div class="container mt-5">
         <h1 class="text-center">Dashboard</h1>
-        <p class="text-center">Welcome, {{ username }}!</p>
+        <p class="text-center">Welcome, {{ request.user.username }}!</p>
 
         {% include 'market/menu_bar.html' %}
         

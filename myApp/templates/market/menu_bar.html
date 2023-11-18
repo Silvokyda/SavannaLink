@@ -63,9 +63,6 @@
                         <span class="cart-total fs-5 fw-bold">${{ cart_total }}</span>
                         {% for item in cart_items %}
                             <p>{{ item.product.name }} - Quantity: <span id="quantity-{{ item.product.id }}">{{ item.quantity }}</span></p>
-                            <!-- Add buttons to increase and decrease quantity -->
-                            <button class="quantity-increase" data-product-id="{{ item.product.id }}">Increase</button>
-                            <button class="quantity-decrease" data-product-id="{{ item.product.id }}">Decrease</button>
                         {% endfor %}
                     {% else %}
                         <span class="cart-total fs-5 fw-bold">$0.00</span>

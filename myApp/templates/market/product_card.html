@@ -20,3 +20,26 @@
                 </div>
             </div>
         </div>
+
+
+<script>
+    function addToCart(productId) {
+        console.log('Adding to cart:', productId);
+
+        $.ajax({
+            type: 'POST',
+            url: '{% url "add_to_cart" %}',
+            data: {
+                'product_id': productId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function (data) {
+                alert('Product added to cart!');
+            },
+            error: function () {
+                // Handle error, e.g., show an alert
+                alert('Error adding to cart. Please try again.');
+            }
+        });
+    }
+</script>

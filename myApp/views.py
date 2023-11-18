@@ -75,15 +75,15 @@ def dashboard(request):
     
     return render(request, 'market/dashboard.html', {'products': products, 'cart_items': cart_items, 'cart_total': cart_total})
 
+@csrf_exempt
 def update_cart(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
-        quantity = int(request.POST.get('quantity')) 
-        product = Product.objects.get(id=product_id)
+        quantity = int(request.POST.get('quantity', 1))  
+        product = get_object_or_404(Product, id=product_id)
         cart_item, created = Cart.objects.get_or_create(user=request.user, product=product)
         cart_item.quantity = quantity
         cart_item.save()
-
         return JsonResponse({'status': 'success'})
 
     return JsonResponse({'status': 'error'})
@@ -92,7 +92,7 @@ def update_cart(request):
 def add_to_cart(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
-        product = Product.objects.get(id=product_id)
+        product = get_object_or_404(Product, id=product_id)
         cart_item, created = Cart.objects.get_or_create(user=request.user, product=product)
         cart_item.quantity += 1
         cart_item.save()
@@ -100,18 +100,18 @@ def add_to_cart(request):
 
     return HttpResponseBadRequest('Invalid request method')
 
+
 @login_required
 def edit_profile(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
 
-    # User Profile Form
     user_profile_form = UserProfileForm(request.POST or None, instance=user_profile)
 
     # Product Form
     product_form = ProductForm(request.POST or None)
 
     # Handle User Profile Form Submission
-    if request.method == 'POST' and 'user-profile-form' in request.POST:
+    if request.method == 'POST' and 'user-info-submit' in request.POST:
         if user_profile_form.is_valid():
             user_profile_form.save()
             return redirect('edit_profile')
@@ -119,11 +119,11 @@ def edit_profile(request):
     # Handle Product Form Submission
     if request.method == 'POST' and 'product-form' in request.POST:
         if product_form.is_valid():
-            # Save the product, assuming you have a user field in your Product model
             product = product_form.save(commit=False)
             product.owner = request.user
             product.save()
             return redirect('edit_profile')
+
 
     return render(request, 'market/edit_profile.html', {
         'user_profile_form': user_profile_form,

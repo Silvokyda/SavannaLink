@@ -10,11 +10,11 @@
     <div class="edit-profile-container">
         <!-- User Info Form -->
         <div class="user-info-form">
-            <h1>Edit Profile</h1>
+            <h1>Edit Profile ({{ request.user.username }})</h1>
             <form method="post" id="user-profile-form">
                 {% csrf_token %}
                 {{ user_profile_form.as_p }}
-                <button type="submit">Save Changes</button>
+                <button type="submit" name="user-info-submit">Save Changes</button>
             </form>
         </div>
 
@@ -22,5 +22,4 @@
 
     </div>
 
-   
 {% endblock %}
