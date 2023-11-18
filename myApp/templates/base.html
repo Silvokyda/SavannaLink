@@ -40,7 +40,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'livestock_list' %}">Livestock Management System</a>
+                <a class="nav-link" href="#">Logistics</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'marketplace' %}">Marketplace</a>
@@ -52,64 +52,6 @@
 <!-- <div class="container mt-4"> -->
     {% block content %}{% endblock %}
 <!-- </div> -->
-
-<script>
-    $(document).ready(function () {
-        function updateQuantity(productId, newQuantity) {
-            $.ajax({
-                type: 'POST',
-                url: '{% url "update_cart" %}',  
-                data: {
-                    'product_id': productId,
-                    'quantity': newQuantity,
-                    'csrfmiddlewaretoken': '{{ csrf_token }}'  
-                },
-                success: function (data) {
-                    $('#quantity-' + productId).text(newQuantity);
-                },
-                error: function () {
-                    alert('Error updating quantity. Please try again.');
-                }
-            });
-        }
-
-        function addToCart(productId) {
-            console.log('Adding to cart:', productId);
-            $.ajax({
-                type: 'POST',
-                url: '{% url "add_to_cart" %}',  
-                data: {
-                    'product_id': productId,
-                    'csrfmiddlewaretoken': '{{ csrf_token }}'  
-                },
-                success: function (data) {
-                    var currentQuantity = parseInt($('#quantity-' + productId).text());
-                    var newQuantity = currentQuantity + 1;
-                    updateQuantity(productId, newQuantity);
-                },
-                error: function () {
-                    alert('Error adding to cart. Please try again.');
-                }
-            });
-        }
-
-        $('.quantity-increase').click(function () {
-            var productId = $(this).data('product-id');
-            var currentQuantity = parseInt($('#quantity-' + productId).text());
-            var newQuantity = currentQuantity + 1;
-            updateQuantity(productId, newQuantity);
-        });
-
-        $('.quantity-decrease').click(function () {
-            var productId = $(this).data('product-id');
-            var currentQuantity = parseInt($('#quantity-' + productId).text());
-            var newQuantity = Math.max(currentQuantity - 1, 0);  
-            updateQuantity(productId, newQuantity);
-        });
-    });
-
-</script> 
-
 
 
 <!-- Add your JavaScript and other scripts here -->

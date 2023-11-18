@@ -1,5 +1,10 @@
 {% load static %}
-
+<style>
+    .cart-badge {
+        position: absolute;
+        right: 5px;
+    }    
+</style>
 <div class="container-fluid">
     <div class="row py-3 border-bottom">
         <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
@@ -38,13 +43,11 @@
                 <li>
                     <a href="#" class="rounded-circle bg-light p-2 mx-1">
                         <img src="{% static 'images/shopping-cart.png' %}" alt="shopping_cart" width="24" height="24">
+                        {% if cart_items %}
+                            <span class="badge bg-danger cart-badge">{{ cart_items.count }}</span>
+                        {% endif %}
                     </a>
-                </li>
-                <li class="d-lg-none">
-                    <a href="#" class="rounded-circle bg-light p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
-                        <img src="{% static 'images/shopping-cart.png' %ty6huy}" alt="cart" width="24" height="24">
-                    </a>
-                </li>
+                </li>                
                 <li class="d-lg-none">
                     <a href="#" class="rounded-circle bg-light p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSearch" aria-controls="offcanvasSearch">
                         <img src="{% static 'images/search.png' %}" alt="cart" width="24" height="24">
@@ -52,7 +55,7 @@
                 </li>
             </ul>
         
-            <div class="cart text-end d-none d-lg-block dropdown">
+            {% comment %} <div class="cart text-end d-none d-lg-block dropdown">
                 <button class="border-0 bg-transparent d-flex flex-column gap-2 lh-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
                     <span class="fs-6 text-muted dropdown-toggle">Your Cart</span>
             
@@ -67,7 +70,7 @@
                     {% endif %}
             
                 </button>
-            </div>
+            </div> {% endcomment %}
             
         </div>                
     </div>

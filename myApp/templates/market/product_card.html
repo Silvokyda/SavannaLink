@@ -1,45 +1,92 @@
-<hr>
-        <div class="bootstrap-tabs product-tabs">        
-            <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
-                    <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
-                        {% for product in products %}
-                        <div class="col card-box">
-                            <div class="card border-0">
-                                <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:100%">
-                                <div class="card-info m-0">
-                                    <h5 class="info-title m-0">{{ product.name }}</h5>
-                                    <p class="info-price m-0">${{ product.price }}</p>
-                                </div>
-                                <p class="card-text">{{ product.description }}</p>
-                                <button class="card-btn" onclick="addToCart('{{ product.id }}')">Add to Cart</button>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+<!-- Add this section to your HTML file -->
+<div class="modal fade" id="productDetailsModal" tabindex="-1" role="dialog" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="productDetailsModalLabel">Product Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-
-
-<script>
-    function addToCart(productId) {
-        console.log('Adding to cart:', productId);
-
-        $.ajax({
-            type: 'POST',
-            url: '{% url "add_to_cart" %}',
-            data: {
-                'product_id': productId,
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            success: function (data) {
-                alert('Product added to cart!');
-            },
-            error: function () {
-                // Handle error, e.g., show an alert
-                alert('Error adding to cart. Please try again.');
-            }
-        });
+        <div class="modal-body">
+          <p>Product Name: <span id="modalProductName"></span></p>
+          <p>Price: Ksh. <span id="modalProductPrice"></span></p>
+          <p>Description: <span id="modalProductDescription"></span></p>
+          <button class="btn btn-primary" onclick="addToCartModal()">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="bootstrap-tabs product-tabs">
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
+        <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
+          {% for product in products %}
+          <div class="col card-box">
+            <div class="card border-0" onclick="showProductDetails('{{ product.name }}', '{{ product.price }}', '{{ product.description }}')">
+              <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 100%" />
+              <div class="card-info m-0">
+                <h5 class="info-title m-0">{{ product.name }}</h5>
+                <p class="info-price m-0">Ksh. {{ product.price }}</p>
+              </div>
+              <p class="card-text">{{ product.description }}</p>
+              <button class="card-btn" onclick="addToCart('{{ product.id }}')">Add to Cart</button>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function addToCartModal() {
+      var productId = $("#modalProductId").val();
+  
+      $.ajax({
+        type: "POST",
+        url: "{% url 'add_to_cart' %}",
+        data: {
+          product_id: productId,
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        success: function (data) {
+          alert("Product added to cart!");
+          // Close the modal
+          $("#productDetailsModal").modal("hide");
+        },
+        error: function () {
+          alert("Error adding to cart. Please try again.");
+        },
+      });
     }
-</script>
+  
+    function addToCart(productId) {
+      $.ajax({
+        type: "POST",
+        url: "{% url 'add_to_cart' %}",
+        data: {
+          product_id: productId,
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        success: function (data) {
+          alert("Product added to cart!");
+        },
+        error: function () {
+          alert("Error adding to cart. Please try again.");
+        },
+      });
+    }
+  
+    function showProductDetails(name, price, description, productId) {
+      // Set product details in the modal
+      $("#modalProductName").text(name);
+      $("#modalProductPrice").text(price);
+      $("#modalProductDescription").text(description);
+      $("#modalProductId").val(productId);
+  
+      // Show the modal
+      $("#productDetailsModal").modal("show");
+    }
+  </script>  

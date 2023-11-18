@@ -5,8 +5,7 @@ from . import views
 
 urlpatterns = [
     path('', views.landing_page, name='landing_page'),
-    path('livestock_list/', views.livestock_list, name='livestock_list'),
-    path('livestock/<int:livestock_id>/', views.livestock_detail, name='livestock_detail'),
+    # path('logistics/', views.livestock_list, name='logistics'),
     path('marketplace/', views.marketplace, name='marketplace'),
     path('market/product/<int:product_id>/', views.market_product_detail, name='market_product_detail'),
     path('signup/', views.signup, name='signup'),

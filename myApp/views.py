@@ -12,16 +12,6 @@ from django.http import HttpResponseBadRequest
 def landing_page(request):
     return render(request, 'landing_page.html')
 
-def livestock_list(request):
-    livestock_list = Livestock.objects.all() 
-    return render(request, 'livestock/livestock_list.html', {'livestock_list': livestock_list})
-
-def livestock_detail(request, livestock_id):
-    try:
-        livestock = Livestock.objects.get(id=livestock_id)  
-        return render(request, 'livestock/livestock_detail.html', {'livestock': livestock})
-    except Livestock.DoesNotExist:
-        return render(request, 'livestock/livestock_detail.html', {'livestock': None})
 
 def market_product_detail(request, product_id):
 
@@ -76,19 +66,23 @@ def dashboard(request):
     return render(request, 'market/dashboard.html', {'products': products, 'cart_items': cart_items, 'cart_total': cart_total})
 
 @csrf_exempt
+@login_required
 def update_cart(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
         quantity = int(request.POST.get('quantity', 1))  
+
         product = get_object_or_404(Product, id=product_id)
         cart_item, created = Cart.objects.get_or_create(user=request.user, product=product)
         cart_item.quantity = quantity
         cart_item.save()
-        return JsonResponse({'status': 'success'})
 
-    return JsonResponse({'status': 'error'})
+        return JsonResponse({'status': 'success', 'quantity': quantity})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
 @csrf_exempt
+@login_required
 def add_to_cart(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
@@ -96,10 +90,10 @@ def add_to_cart(request):
         cart_item, created = Cart.objects.get_or_create(user=request.user, product=product)
         cart_item.quantity += 1
         cart_item.save()
-        return JsonResponse({'status': 'success'})
 
-    return HttpResponseBadRequest('Invalid request method')
+        return JsonResponse({'status': 'success', 'quantity': cart_item.quantity})
 
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
 @login_required
 def edit_profile(request):
